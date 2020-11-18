@@ -47,9 +47,11 @@ const gameBoard = (() => {
   }
 
   function addPiece(squareId, symbol) {
-    let row, col;
-    [row, col] = _convertToCoordinate(squareId);
-    board[row][col] = symbol;
+    if (!gameController.isGameOver()) {
+      let row, col;
+      [row, col] = _convertToCoordinate(squareId);
+      board[row][col] = symbol;
+    }
   }
 
   function emptyAt(squareId) {
@@ -109,10 +111,15 @@ const displayController = (() => {
 const gameController = (() => {
   let players;
   let activePlayer;
+  let gameOver = false;
 
   function _assignPlayers(p1, p2) {
     players = [p1, p2];
     activePlayer = p1;
+  }
+
+  function isGameOver() {
+    return gameOver;
   }
 
   function getActivePlayer() {
@@ -137,13 +144,14 @@ const gameController = (() => {
     displayController.displayBoard(gameBoard.getBoard());
     if (gameBoard.gameOver()) {
       displayController.gameOverMessage();
+      gameOver = true;
     } else {
       switchActivePlayer();
       displayController.setNotification();
     }
   }
 
-  return {startGame, switchActivePlayer, getActivePlayer, playTurn}
+  return {startGame, switchActivePlayer, getActivePlayer, playTurn, isGameOver}
 })();
 
 document.getElementById('board').onclick = (event) => {
