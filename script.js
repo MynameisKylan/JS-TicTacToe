@@ -6,7 +6,7 @@ const gameBoard = (() => {
     return [parseInt(id / 3), id % 3]
   }
 
-  function _win() {
+  function win() {
     for (let i = 0; i < 3; i++) {
         // horizontals
       if (board[i][0] !== "" && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
@@ -24,18 +24,18 @@ const gameBoard = (() => {
   }
 
   function _full() {
-    board.forEach((row) => {
-      row.forEach((square) => {
-        if (!square) {
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        if (!board[i][j]) {
           return false;
         }
-      })
-    })
+      }
+    }
     return true;
   }
 
   function gameOver() {
-    return _win() || _full();
+    return win() || _full();
   }
 
   function initializeBoard() {
@@ -56,7 +56,7 @@ const gameBoard = (() => {
     board[squareId] === undefined;
   }
 
-  return {initializeBoard, getBoard, addPiece, emptyAt, gameOver, _win, _full}
+  return {initializeBoard, getBoard, addPiece, emptyAt, gameOver, win}
 })();
 
 // TODO: player objects - factory
@@ -87,7 +87,22 @@ const displayController = (() => {
     }
   }
 
-  return {displayBoard, clearBoard}
+  function gameOverMessage() {
+    let notification = document.getElementById('notification');
+
+    if (gameBoard.win()) {
+      notification.innerHTML = `${gameController.getActivePlayer().getName()} wins!`;
+    } else {
+      notification.innerHTML = 'It\'s a tie!';
+    }
+  }
+
+  function setNotification() {
+    let notification = document.getElementById('notification');
+    notification.innerHTML = `It is ${gameController.getActivePlayer().getName()}'s turn`;
+  }
+
+  return {displayBoard, clearBoard, setNotification, gameOverMessage}
 })();
 
 // TODO: gameController object - module
@@ -98,11 +113,6 @@ const gameController = (() => {
   function _assignPlayers(p1, p2) {
     players = [p1, p2];
     activePlayer = p1;
-  }
-
-  function _setNotification() {
-    let notification = document.getElementById('notification');
-    notification.innerHTML = `It is ${activePlayer.getName()}'s turn`;
   }
 
   function getActivePlayer() {
@@ -119,14 +129,18 @@ const gameController = (() => {
     let p1 = Player(document.getElementById('p1').value, '&times;');
     let p2 = Player(document.getElementById('p2').value, 'o');
     _assignPlayers(p1, p2);
-    _setNotification();
+    displayController.setNotification();
   }
 
   function playTurn(id) {
     gameBoard.addPiece(id, getActivePlayer().getSymbol());
     displayController.displayBoard(gameBoard.getBoard());
-    switchActivePlayer();
-    _setNotification();
+    if (gameBoard.gameOver()) {
+      displayController.gameOverMessage();
+    } else {
+      switchActivePlayer();
+      displayController.setNotification();
+    }
   }
 
   return {startGame, switchActivePlayer, getActivePlayer, playTurn}
