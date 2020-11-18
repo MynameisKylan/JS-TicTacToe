@@ -10,12 +10,12 @@ h1 {
   background-color:black;
   width:400px;
   height:400px;
-  margin:0 auto;
 }
 
 .piece {
   text-align:center;
   height:100%;
+  user-select:none;
 }
 
 .square {
@@ -24,7 +24,35 @@ h1 {
 }
 
 .square:hover {
-  background:lightslategrey;
-  transition: all 0.2s ease;
+  /* background:lightslategrey; */
+  border: 5px solid lightpink;
+  transition: all 0.15s ease;
+  cursor:pointer;
+}
+
+#notification {
+  margin: 0 auto;
+  text-align:center;
+  display:block;
+}
+
+.ui {
+  display:flex;
+  justify-content: center;
+}
+
+#start {
+  padding:0.5em 1em;
+  text-align:center;
+  width: 350px;
+  font-size:2em;
+  background: lightgreen;
+  margin: 0.5em auto;
+  border-radius:5px;
+  user-select:none;
+}
+
+#start:hover {
+  opacity:0.8;
   cursor:pointer;
 }
