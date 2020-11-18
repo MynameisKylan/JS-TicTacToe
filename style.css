@@ -1,0 +1,30 @@
+h1 {
+  text-align:center;
+}
+
+#board {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3,1fr);
+  gap:5px;
+  background-color:black;
+  width:400px;
+  height:400px;
+  margin:0 auto;
+}
+
+.piece {
+  text-align:center;
+  height:100%;
+}
+
+.square {
+  background: white;
+  font-size:5em;
+}
+
+.square:hover {
+  background:lightslategrey;
+  transition: all 0.2s ease;
+  cursor:pointer;
+}
